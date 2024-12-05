@@ -43,7 +43,7 @@ def classify(input):
     elif (general_type_json["amplifier"]["amp-min"] < amp_percentage):
         robot_type = "amplifier"
     elif (general_type_json["shooter"]["speaker-min"] < speaker_percentage):
-        robot_type = "speaker"
+        robot_type = "shooter"
     elif (general_type_json["trucker"]["shuttle-min"] < shuttle_percentage):
         robot_type = "trucker"
     else:
