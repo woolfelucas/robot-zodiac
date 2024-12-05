@@ -11,7 +11,7 @@
         "amp-min":0.35,
         "amp-max":0.65,
         "speaker-min":0.35,
-        "speaker-max":0.65,
+        "speaker-max":0.65
     },
 
     "amplifier":{

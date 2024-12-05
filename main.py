@@ -1,6 +1,6 @@
 import json
 import csv
-
+from classify import classify
 
 # general-types.json is unused for now because bugs
 general_type_json = {
@@ -32,65 +32,48 @@ general_type_json = {
     }
 }
 
-def classify(input):
-    robot_number = input[0]
-    amp_attempts = input[1]+input[2]
-    if amp_attempts != 0:
-        amp_accuracy = input[1]/amp_attempts
-    else:
-        amp_accuracy = 0
-    
-    speaker_attempts = input[3]+input[4]
-    if speaker_attempts != 0:
-        speaker_accuracy = input[3]/speaker_attempts
-    else:
-        speaker_accuracy = 0
-
-    shuttle_attempts = input[5]
-
-    total_note_movement = amp_attempts+speaker_attempts+shuttle_attempts
-
-    if total_note_movement != 0:
-        amp_percentage = amp_attempts/total_note_movement
-        speaker_percentage = speaker_attempts/total_note_movement
-        shuttle_percentage = shuttle_attempts/total_note_movement
-    else:
-        return [robot_number, "Error: No Note Movement"]
-    #yandev time, yippee !!! (i hate my life)
-
-    if (general_type_json["generalist-true"]["amp-min"] < amp_percentage < general_type_json["generalist-true"]["amp-max"]) & (general_type_json["generalist-true"]["speaker-min"] < speaker_percentage < general_type_json["generalist-true"]["speaker-max"]) & (general_type_json["generalist-true"]["shuttle-min"] < shuttle_percentage < general_type_json["generalist-true"]["shuttle-max"]):
-        robot_type = "generalist-true"
-    elif (general_type_json["generalist-attacker"]["amp-min"] < amp_percentage < general_type_json["generalist-attacker"]["amp-max"]) & (general_type_json["generalist-attacker"]["speaker-min"] < speaker_percentage < general_type_json["generalist-attacker"]["speaker-max"]):
-        robot_type = "generalist-attacker"
-    elif (general_type_json["amplifier"]["amp-min"] < amp_percentage):
-        robot_type = "amplifier"
-    elif (general_type_json["shooter"]["speaker-min"] < speaker_percentage):
-        robot_type = "speaker"
-    elif (general_type_json["trucker"]["shuttle-min"] < shuttle_percentage):
-        robot_type = "trucker"
-    else:
-        robot_type = "undifferentiated"
-    
-    # that was disgusting
-
-    return [robot_number, robot_type, total_note_movement]
 
 
 # actual code starts here
 
-output_file = open("./output.txt", "w")
+output_file_path = "./output.txt"
+data_file_path = "./data.csv"
 
-with open("./data.csv", newline='') as csvfile:
-    dataCSV = csv.reader(csvfile)
-    for lines in dataCSV:
-        if lines[0].find("#") == -1:
-            int_lines = [int(entry) for entry in lines]
-            output_file.write(str(classify(int_lines))+",\n")
+output_file = open(output_file_path, "w")
 
+def classify_individual():
+    with open(data_file_path, newline='') as csvfile:
+        dataCSV = csv.reader(csvfile)
+        for lines in dataCSV:
+            if lines[0].find("#") == -1:
+                int_lines = [int(entry) for entry in lines]
+                output_file.write(str(classify(int_lines))+"\n")
+    print("classify_individual() complete, log:" + output_file_path)
 
+def get_team_list():
+    with open(data_file_path, newline='') as csvfile:
+        dataCSV = csv.reader(csvfile)
+        teams = []
+        for lines in dataCSV:
+            if teams.count(lines[0]) == 0 and lines[0].find("#") == -1:
+                teams.append(lines[0])
+        print(teams)
 
+def classify_average():
+    with open(data_file_path, newLine='') as csvfile:
+        dataCSV = csv.reader(csvfile)
+        for lines in dataCSV:
+            if lines[0].find("#") == -1:
+                break # FIX LATER AAAAUGH
 
+get_team_list()
+classify_individual()
 
+'''
+def sort_output():
+    with open("./output.txt")
+
+'''
 
 
 #file = open("general-types.json")
